@@ -42,3 +42,34 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .modal-field span{font-size:13px;color:var(--muted)}
 .modal-field input{padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px}
 .modal-foot{display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--border);padding:12px 18px}
+
+/* ===== 调度波次 / 执行工作台 ===== */
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin:14px 0 12px}
+.tab{border:1px solid transparent;border-bottom:none;background:none;padding:7px 14px;font-size:13px;color:var(--muted);cursor:pointer;border-radius:6px 6px 0 0}
+.tab.active{background:#fff;border-color:var(--border);color:#1f2937;font-weight:600}
+.section-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+.section-card h3{margin:0 0 4px;font-size:15px}
+.section-desc{color:var(--muted);font-size:12px;margin:0 0 10px}
+.form-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.form-row label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.form-row input,.form-row select{padding:6px 9px;border:1px solid var(--border);border-radius:6px;font-size:13px;min-width:150px}
+.wave-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:10px}
+.wave-lane{border:1px solid var(--border);border-radius:8px;padding:10px;background:#fbfcfe}
+.wave-lane h4{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.wave-node{border:1px solid var(--border);border-radius:6px;padding:7px 9px;margin-bottom:6px;background:#fff;font-size:12px}
+.wave-node strong{display:block;font-size:13px;margin-bottom:2px}
+.wave-node .meta{color:var(--muted);line-height:1.5}
+.chip{display:inline-block;border-radius:999px;padding:1px 8px;font-size:11px;border:1px solid var(--border);background:#f8fafc;color:var(--muted);margin-left:4px}
+.chip.ok{background:#ecfdf3;border-color:#abefc6;color:#067647}
+.chip.warn{background:#fffaeb;border-color:#fedf89;color:#b54708}
+.chip.bad{background:#fef3f2;border-color:#fecdca;color:#b42318}
+.chip.run{background:#eff8ff;border-color:#b2ddff;color:#175cd3}
+.alert-box{border-radius:6px;padding:8px 10px;font-size:12px;margin:8px 0}
+.alert-box.bad{background:#fef3f2;border:1px solid #fecdca;color:#b42318}
+.alert-box.warn{background:#fffaeb;border:1px solid #fedf89;color:#b54708}
+.alert-box.ok{background:#ecfdf3;border:1px solid #abefc6;color:#067647}
+.sub-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.sub-table th,.sub-table td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top}
+.sub-table th{background:#f8fafc;color:var(--muted);font-weight:500}
+.inline-actions{display:flex;gap:6px;flex-wrap:wrap}
+.toolbar-note{font-size:12px;color:var(--muted);margin-top:6px}

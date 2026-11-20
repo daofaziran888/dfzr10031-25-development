@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.routers import ROUTERS
+from app.seed_scenario import install as install_scenario
 from app.store import store
 
 app = FastAPI(title="数据分析实验与数据应用服务平台", version="1.0.0")
@@ -24,6 +25,9 @@ app.add_middleware(
 
 for module in ROUTERS:
     app.include_router(module.router)
+
+# 演示数据：一个批次、分叉与汇合的管道节点，以及一次上游更正。
+install_scenario()
 
 
 @app.get("/api/health")

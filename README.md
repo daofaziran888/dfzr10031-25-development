@@ -60,13 +60,52 @@ npm run dev
 | 智能告警 | `alert` | 告警规则 | 规则编号、告警名称、监控指标 |
 | 分析用户组 | `user_group` | 用户组 | 组编号、组名称、组描述 |
 | 数据快照 | `snapshot` | 快照记录 | 快照编号、数据集名称、快照时间 |
-| 任务调度 | `scheduler` | 调度任务 | 任务编号、任务名称、调度类型 |
+| 任务调度 | `scheduler` | 调度任务 / 调度执行波次 | 任务编号、任务名称、调度类型 |
 | 缓存管理 | `cache` | 缓存配置 | 缓存编号、缓存目标、缓存策略 |
-| 分析管道 | `pipeline` | 分析节点 | 节点编号、输入数据集、分析算子 |
+| 分析管道 | `pipeline` | 分析节点 / 执行单 | 节点编号、输入数据集、分析算子 |
 | 分析模型 | `model` | 模型配置 | 模型编号、模型名称、模型类型 |
 | 数据集市 | `data_mart` | 集市表 | 表编号、表名称、主题域 |
 | 数据导出 | `export` | 导出任务 | 任务编号、导出对象、导出格式 |
 | 数据审计 | `audit` | 审计记录 | 记录编号、操作类型、操作人 |
+
+## 调度执行波次与分析管道
+
+任务调度除了任务台账，还负责把「一组管道节点 + 一个数据批次」算成可执行的波次：
+
+1. `POST /api/scheduler/batches` 登记数据批次与外部输入版本；
+2. `POST /api/scheduler/waves` 生成调度执行波次数据集（`GET /api/scheduler/waves?batch=...` 读取）；
+3. 循环依赖、缺失依赖和被它们阻塞的下游节点写入 `blocked`，不进入波次；
+   节点只有在计划输入版本都已提交后才转为「待领取」。
+
+分析管道读取波次后执行：
+
+```text
+POST /api/pipeline/claims                    领取，必须写清消费的上游产物版本
+POST /api/pipeline/runs/{id}/receipt         回执，写实际消费版本与输出版本，并放行下游
+POST /api/pipeline/runs/{id}/fail|retry|void 失败、重试、作废未提交的领取
+POST /api/pipeline/corrections               登记上游更正，返回受影响支路
+POST /api/pipeline/corrections/{id}/resolve  选择 void_and_replan 或 finish_and_backfill
+GET  /api/pipeline/publish-scope?batch=...   当前批次可对外发布的产物范围
+GET  /api/pipeline/trace?batch=...           波次、执行单、回执与支路追溯
+```
+
+更正处理策略的差别：
+
+- `void_and_replan`：作废尚未提交的领取，以新版本重新放行受影响支路；
+  未受影响支路直接复用已提交产物，不重复计算。
+- `finish_and_backfill`：允许原领取按旧版本跑完，但产物只记「历史版本」，
+  同时把同一批次的受影响节点排成补算波次。
+
+启动后后端会自动装载一个演示批次 `BATCH-20261119-01`：渠道 / 地域 / 对账三条支路
+汇合到 `PIPE-1301`，汇合节点已领取三条支路的 v1 但尚未提交，可直接在「分析管道 →
+更正与重试」里走一遍上游更正。
+
+### 自测
+
+```bash
+cd backend
+python3 -m unittest discover -s tests -t .
+```
 
 ## 约定
 
